@@ -1,0 +1,416 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Tabulate statistics and make graphs for the AEA data editor report
+> # Harry Son
+> # 12/11/2020
+> 
+> # Inputs
+> #   - file.path(jiraanon,"jira.anon.RDS") 
+> # Outputs
+> 
+> 
+> ### Load libraries 
+> ### Requirements: have library *here*
+> source(here::here("global-libraries.R"),echo=TRUE)
+
+> options(repos = c(REPO_NAME = "https://packagemanager.rstudio.com/all/__linux__/focal/2021-12-01+MTo2NjQ1NDU1LDI6NDUyNjIxNTtCRjhCNTA0Mw"))
+
+> pkgTest <- function(x) {
++     if (!require(x, character.only = TRUE)) {
++         install.packages(x, dep = TRUE)
++         if (!require(x, charact .... [TRUNCATED] 
+
+> pkgTest.github <- function(libname, source, pkgname = libname) {
++     if (!require(libname, character.only = TRUE)) {
++         if (pkgname == "")  .... [TRUNCATED] 
+
+> global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
++     "stringr", "readr", "splitstackshape", "digest", "remotes", 
++     "readxl", "write ..." ... [TRUNCATED] 
+
+> results <- sapply(as.list(global.libraries), pkgTest)
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: here
+here() starts at /home/rstudio
+Loading required package: tidyr
+Loading required package: tibble
+Loading required package: stringr
+Loading required package: readr
+Loading required package: splitstackshape
+Loading required package: digest
+Loading required package: remotes
+Loading required package: readxl
+Loading required package: writexl
+Loading required package: ggplot2
+Loading required package: ggthemes
+Loading required package: janitor
+
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+Loading required package: dataverse
+
+> pkgTest.github("data.table", "Rdatatable")
+Loading required package: data.table
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+[1] "OK"
+
+> pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
+Loading required package: stargazer
+
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer 
+
+[1] "OK"
+> source(here::here("programs","config.R"),echo=TRUE)
+
+> process_anon <- TRUE
+
+> download_anon <- TRUE
+
+> firstday <- "2021-12-01"
+
+> lastday <- "2022-11-30"
+
+> basepath <- here::here()
+
+> setwd(basepath)
+
+> jira.anon.partial <- file.path("data", "jira", "anon")
+
+> jiraanon <- file.path(basepath, jira.anon.partial)
+
+> manual <- file.path(basepath, "data", "manual")
+
+> jira.raw <- file.path("data", "jira", "raw")
+
+> icpsrbase <- file.path(basepath, "data", "icpsr")
+
+> icpsr.utilization.date <- "2022-12-07"
+
+> icpsr.utilization.file <- paste0("utilizationReport-", 
++     icpsr.utilization.date, ".csv")
+
+> zenodobase <- file.path(basepath, "data", "zenodo")
+
+> jira.anon.name <- file.path(jiraanon, "jira.anon.RDS")
+
+> jira.anon.commit <- "01b56117b4eaa65671f2b60d804cf6b176e1a6ce"
+
+> jira.anon.sha256 <- "08b93c4a60d4bf02a4394f37da2ae16880ab89482278f98e74e0f9552c459a8e"
+
+> jira.anon.sha512 <- "c8d828bc34bb965a57aab0e4446e0b06b7e55329f0600a4bb8e6d2d75908f4c14340a9f7ea6fe4e6eae103ffdb1d019aab313956be52c6971bf3c89633ecc31 ..." ... [TRUNCATED] 
+
+> jira.anon.urlbase <- paste0("https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/", 
++     jira.anon.commit)
+
+> jira.anon.url <- file.path(jira.anon.urlbase, "data", 
++     "anon", "jira.anon.RDS")
+
+> jira.members.url <- file.path(jira.anon.urlbase, "data", 
++     "replicationlab_members.txt")
+
+> jira.members.name <- file.path(jiraanon, "replicationlab_members.txt")
+
+> noncompliance.name <- file.path(jira.raw, "non-compliant-raw.xlsx")
+
+> jira.updates.name <- file.path(jira.raw, "updates-raw.xlsx")
+
+> scholarone <- file.path(basepath, "data", "scholarone")
+
+> scholarone.file <- "dataEditorReport_20211118-20221117.xlsx"
+
+> scholarone.name <- file.path(scholarone, scholarone.file)
+
+> scholarone.prev <- "dataEditorReport_20201128-20211127Revised.xlsx"
+
+> scholarone.skip <- 31
+
+> scholarone.skip2 <- 44
+
+> scholarone.pskip <- 33
+
+> images <- file.path(basepath, "images")
+
+> tables <- file.path(basepath, "tables")
+
+> programs <- file.path(basepath, "programs")
+
+> temp <- file.path(basepath, "data", "temp")
+
+> latexnums.Rda <- file.path(tables, "latexnums.Rda")
+
+> latexnums.tex <- file.path(tables, "latexnums.tex")
+
+> for (dir in list(images, tables, programs, temp)) {
++     if (file.exists(dir)) {
++     }
++     else {
++         dir.create(file.path(dir))
++     }
+ .... [TRUNCATED] 
+
+> set.seed(20201201)
+
+> pkgTest("tibble")
+[1] "OK"
+
+> if (file.exists(latexnums.Rda)) {
++     print(paste0("File for export to LaTeX found: ", latexnums.Rda))
++ } else {
++     latexnums <- tibble(field  .... [TRUNCATED] 
+[1] "File for export to LaTeX found: /home/rstudio/tables/latexnums.Rda"
+
+> update_latexnums <- function(field, value) {
++     latexnums <- readRDS(latexnums.Rda)
++     if (any(latexnums$field == field)) {
++         message( .... [TRUNCATED] 
+
+> .Last <- function() {
++     sessionInfo()
++ }
+> library(stargazer)
+> 
+> 
+> # we will re-use these 
+> jira.pyear <- readRDS(file=file.path(temp,"jira.pyear.RDS"))
+> jira.filter.submitted <- readRDS(file=file.path(temp,"jira.submitted.RDS"))
+> 
+> ## By journal
+> issues_total_journal <- jira.pyear %>%
++   filter(!(Journal=="")) %>%
++   group_by(Journal) %>%
++   summarise(issue_numbers = n_distinct(ticket),
++             mcs_numbers   = n_distinct(mc_number_anon))
+> 
+> # stargazer(issues_total_journal,style = "aer",
+> #           summary = FALSE,
+> #           out = file.path(tables,"issues_total_journal.tex"),
+> #           out.header = FALSE,
+> #           float = FALSE
+> # )
+> 
+> #### Number of reports processed (went past submitted to MC) since December 1
+> 
+> assess_cplt <- jira.filter.submitted %>%
++   select(ticket) %>% 
++   distinct() %>%
++   nrow()
+> #update_latexnums("jiraissuescplt",assess_cplt)
+> 
+> 
+> manuscript_cplt <- jira.filter.submitted %>%
++   select(mc_number_anon) %>% 
++   distinct() %>% nrow()
+> #update_latexnums("jiramcscplt",manuscript_cplt)
+> 
+> 
+> ## By journal
+> assess_cplt_journal <- jira.filter.submitted %>%
++   group_by(Journal) %>%
++   summarise(issues_cplt = n_distinct(ticket),
++             mcs_cplt    = n_distinct(mc_number_anon)) 
+> 
+> # stargazer(assess_cplt_journal,style = "aer",
+> #           summary = FALSE,
+> #           out = file.path(tables,"assess_cplt_journal.tex"),
+> #           out.header = FALSE,
+> #           float = FALSE
+> #           )
+> 
+> 
+> 
+> 
+> 
+> 
+> #### Number of assessments/manuscript that are pending publication
+> 
+> jira.filter.pending <- jira.pyear %>%
++   filter(Status %in% c("Pending publication","Pending Article DOI"))
+> 
+> manuscript_pending <- jira.filter.pending %>%
++   select(mc_number_anon) %>% 
++   distinct() %>% nrow()
+> #update_latexnums("jiramcspending",manuscript_pending)
+> 
+> 
+> ## By journal
+> pendingpub_by_journal <- jira.filter.pending %>%
++   group_by(Journal) %>%
++   summarise(mcs_pendingpub   = n_distinct(mc_number_anon))
+> 
+> # stargazer(pendingpub_by_journal,style = "aer",
+> #           summary = FALSE,
+> #           out = file.path(tables,"pendingpub_by_journal.tex"),
+> #           out.header = FALSE,
+> #           float = FALSE
+> # )
+> 
+> 
+> 
+> #### Number of assessment processed by external replicator since December 1, 2019
+> ## Total
+> 
+> external_total <- jira.filter.submitted %>%
++   filter(external == "Yes") %>%
++   select(ticket) %>% distinct() %>%
++   nrow()
+> #update_latexnums("jiraexternal",external_total)
+> mcs_external <- jira.filter.submitted %>%
++   filter(external == "Yes") %>%
++   select(mc_number_anon) %>% distinct() %>%
++   nrow()
+> #update_latexnums("jiramcsexternal",mcs_external)
+> 
+> ## By journal
+> external_total_journal <- jira.filter.submitted %>%
++   filter(external == "Yes") %>%
++   group_by(Journal) %>%
++   summarise(mcs_external = n_distinct(mc_number_anon),
++             issues_external=n_distinct(ticket))
+> 
+> # # output table
+> # stargazer(external_total_journal,style = "aer",
+> #           summary = FALSE,
+> #           out = file.path(tables,"external_total_journal.tex"),
+> #           out.header = FALSE,
+> #           float = FALSE
+> # )
+> # # Histogram
+> # n_external_journal_plot <- ggplot(external_total_journal, aes(x = Journal, y = issues_external)) +
+> #   geom_bar(stat = "identity", colour="white", fill="grey") +
+> #   labs(x = "Journal", y = "Number of cases processed by external replicator", title = "Total usage of external replicators by journal") + 
+> #   theme_classic() +
+> #   geom_text(aes(label=issues_external), hjust=1.5, size=3.5) +
+> #   coord_flip()
+> # 
+> # 
+> # ggsave(file.path(images,"n_external_journal_plot.png"), 
+> #        n_external_journal_plot  +
+> #          labs(y=element_blank(),title=element_blank()))
+> # 
+> #n_external_journal_plot
+> 
+> 
+> ### Combine five data columns
+> 
+> full_join(issues_total_journal,assess_cplt_journal,by=c("Journal")) %>%
++                    full_join(external_total_journal,by=c("Journal")) %>%
++                    full_join(pendingpub_by_journal,by=c("Journal")) %>%
++                    mutate(Journal = if_else(Journal=="AEA P&P","AEA P+P",Journal)) ->
++   tmp
+> 
+> # should probably have been done before
+> 
+> tmp %>% 
++   summarize(      "Issues (rcvd)" = sum(issue_numbers,na.rm = TRUE),
++                    "Issues (cplt)" = sum(issues_cplt,na.rm = TRUE),
++                    "Issues (external)" = sum(issues_external,na.rm = TRUE),
++                    "Manuscripts (rcvd)" = sum(mcs_numbers,na.rm = TRUE),
++                    "Manuscripts (cplt)" = sum(mcs_cplt,na.rm = TRUE),
++                    "Manuscripts (ext.)" = sum(mcs_external,na.rm = TRUE),
++                    "Manuscripts (pend.)"= sum(mcs_pendingpub,na.rm = TRUE)) %>%
++   mutate(Journal = "Totals") %>%
++   select(Journal,everything()) -> tmp2
+> 
+> # update numbers
+> 
+> update_latexnums("jiraissues",tmp2$`Issues (rcvd)`)
+Adding new row for field jiraissues
+> update_latexnums("jiramcs",   tmp2$`Manuscripts (rcvd)`)
+Adding new row for field jiramcs
+> 
+> update_latexnums("jiraissuescplt", tmp2$`Issues (cplt)`)
+Adding new row for field jiraissuescplt
+> update_latexnums("jiraexternal",   tmp2$`Issues (external)`)
+Adding new row for field jiraexternal
+> update_latexnums("jiramcscplt",    tmp2$`Manuscripts (cplt)`)
+Adding new row for field jiramcscplt
+> update_latexnums("jiramcspending", tmp2$`Manuscripts (pend.)`)
+Adding new row for field jiramcspending
+> update_latexnums("jiramcsexternal",tmp2$`Manuscripts (ext.)`)
+Adding new row for field jiramcsexternal
+> 
+> 
+> 
+> bind_rows(tmp%>%
++             select(Journal,"Issues (rcvd)" = issue_numbers,
++                    "Issues (cplt)" = issues_cplt,
++                    "Issues (external)" = issues_external,
++                    "Manuscripts (rcvd)" = mcs_numbers,
++                    "Manuscripts (cplt)" = mcs_cplt,
++                    "Manuscripts (ext.)" = mcs_external,
++                    "Manuscripts (pend.)"= mcs_pendingpub),
++           tmp2) -> n_journal_table
+> # output table
+> stargazer(n_journal_table,style = "aer",
++           summary = FALSE,
++           out = file.path(tables,"n_journal_numbers.tex"),
++           out.header = FALSE,
++           float = FALSE,
++           rownames = FALSE
++ )
+
+% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Thu, Mar 02, 2023 - 03:41:53 AM
+\begin{tabular}{@{\extracolsep{5pt}} cccccccc} 
+\toprule 
+Journal & Issues (rcvd) & Issues (cplt) & Issues (external) & Manuscripts (rcvd) & Manuscripts (cplt) & Manuscripts (ext.) & Manuscripts (pend.) \\ 
+\midrule AEA P+P & 70 & NA & NA & 69 & NA & NA & 57 \\ 
+AEJ:Applied Economics & 112 & 91 & NA & 72 & 67 & NA & 29 \\ 
+AEJ:Economic Policy & 57 & 48 & 2 & 54 & 45 & 2 & 25 \\ 
+AEJ:Macro & 52 & 45 & 4 & 45 & 41 & 4 & 21 \\ 
+AEJ:Micro & 20 & 18 & 1 & 18 & 16 & 1 & 6 \\ 
+AER & 103 & 83 & 1 & 96 & 78 & 1 & 64 \\ 
+AER:Insights & 33 & 28 & 1 & 30 & 26 & 1 & 19 \\ 
+JEL & 26 & 22 & NA & 21 & 19 & NA & 15 \\ 
+JEP & 27 & 26 & 1 & 24 & 24 & 1 & 21 \\ 
+Totals & 500 & 361 & 10 & 429 & 316 & 10 & 257 \\ 
+\bottomrule 
+\end{tabular} 
+> 
+> 
+> #
+> 
+> proc.time()
+   user  system elapsed 
+  1.597   1.403   1.556 

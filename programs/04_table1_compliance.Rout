@@ -1,0 +1,353 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Tabulate statistics and make graphs for the AEA data editor report
+> # Harry Son
+> # 2/18/2021
+> 
+> # Inputs
+> #   - file.path(jiraanon,"jira.anon.RDS") 
+> #   - file.path(temp,"jira.others.RDS)
+> # Outputs
+> 
+> 
+> ### Load libraries 
+> ### Requirements: have library *here*
+> source(here::here("global-libraries.R"),echo=TRUE)
+
+> options(repos = c(REPO_NAME = "https://packagemanager.rstudio.com/all/__linux__/focal/2021-12-01+MTo2NjQ1NDU1LDI6NDUyNjIxNTtCRjhCNTA0Mw"))
+
+> pkgTest <- function(x) {
++     if (!require(x, character.only = TRUE)) {
++         install.packages(x, dep = TRUE)
++         if (!require(x, charact .... [TRUNCATED] 
+
+> pkgTest.github <- function(libname, source, pkgname = libname) {
++     if (!require(libname, character.only = TRUE)) {
++         if (pkgname == "")  .... [TRUNCATED] 
+
+> global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
++     "stringr", "readr", "splitstackshape", "digest", "remotes", 
++     "readxl", "write ..." ... [TRUNCATED] 
+
+> results <- sapply(as.list(global.libraries), pkgTest)
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: here
+here() starts at /home/rstudio
+Loading required package: tidyr
+Loading required package: tibble
+Loading required package: stringr
+Loading required package: readr
+Loading required package: splitstackshape
+Loading required package: digest
+Loading required package: remotes
+Loading required package: readxl
+Loading required package: writexl
+Loading required package: ggplot2
+Loading required package: ggthemes
+Loading required package: janitor
+
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+Loading required package: dataverse
+
+> pkgTest.github("data.table", "Rdatatable")
+Loading required package: data.table
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+[1] "OK"
+
+> pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
+Loading required package: stargazer
+
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer 
+
+[1] "OK"
+> source(here::here("programs","config.R"),echo=TRUE)
+
+> process_anon <- TRUE
+
+> download_anon <- TRUE
+
+> firstday <- "2021-12-01"
+
+> lastday <- "2022-11-30"
+
+> basepath <- here::here()
+
+> setwd(basepath)
+
+> jira.anon.partial <- file.path("data", "jira", "anon")
+
+> jiraanon <- file.path(basepath, jira.anon.partial)
+
+> manual <- file.path(basepath, "data", "manual")
+
+> jira.raw <- file.path("data", "jira", "raw")
+
+> icpsrbase <- file.path(basepath, "data", "icpsr")
+
+> icpsr.utilization.date <- "2022-12-07"
+
+> icpsr.utilization.file <- paste0("utilizationReport-", 
++     icpsr.utilization.date, ".csv")
+
+> zenodobase <- file.path(basepath, "data", "zenodo")
+
+> jira.anon.name <- file.path(jiraanon, "jira.anon.RDS")
+
+> jira.anon.commit <- "01b56117b4eaa65671f2b60d804cf6b176e1a6ce"
+
+> jira.anon.sha256 <- "08b93c4a60d4bf02a4394f37da2ae16880ab89482278f98e74e0f9552c459a8e"
+
+> jira.anon.sha512 <- "c8d828bc34bb965a57aab0e4446e0b06b7e55329f0600a4bb8e6d2d75908f4c14340a9f7ea6fe4e6eae103ffdb1d019aab313956be52c6971bf3c89633ecc31 ..." ... [TRUNCATED] 
+
+> jira.anon.urlbase <- paste0("https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/", 
++     jira.anon.commit)
+
+> jira.anon.url <- file.path(jira.anon.urlbase, "data", 
++     "anon", "jira.anon.RDS")
+
+> jira.members.url <- file.path(jira.anon.urlbase, "data", 
++     "replicationlab_members.txt")
+
+> jira.members.name <- file.path(jiraanon, "replicationlab_members.txt")
+
+> noncompliance.name <- file.path(jira.raw, "non-compliant-raw.xlsx")
+
+> jira.updates.name <- file.path(jira.raw, "updates-raw.xlsx")
+
+> scholarone <- file.path(basepath, "data", "scholarone")
+
+> scholarone.file <- "dataEditorReport_20211118-20221117.xlsx"
+
+> scholarone.name <- file.path(scholarone, scholarone.file)
+
+> scholarone.prev <- "dataEditorReport_20201128-20211127Revised.xlsx"
+
+> scholarone.skip <- 31
+
+> scholarone.skip2 <- 44
+
+> scholarone.pskip <- 33
+
+> images <- file.path(basepath, "images")
+
+> tables <- file.path(basepath, "tables")
+
+> programs <- file.path(basepath, "programs")
+
+> temp <- file.path(basepath, "data", "temp")
+
+> latexnums.Rda <- file.path(tables, "latexnums.Rda")
+
+> latexnums.tex <- file.path(tables, "latexnums.tex")
+
+> for (dir in list(images, tables, programs, temp)) {
++     if (file.exists(dir)) {
++     }
++     else {
++         dir.create(file.path(dir))
++     }
+ .... [TRUNCATED] 
+
+> set.seed(20201201)
+
+> pkgTest("tibble")
+[1] "OK"
+
+> if (file.exists(latexnums.Rda)) {
++     print(paste0("File for export to LaTeX found: ", latexnums.Rda))
++ } else {
++     latexnums <- tibble(field  .... [TRUNCATED] 
+[1] "File for export to LaTeX found: /home/rstudio/tables/latexnums.Rda"
+
+> update_latexnums <- function(field, value) {
++     latexnums <- readRDS(latexnums.Rda)
++     if (any(latexnums$field == field)) {
++         message( .... [TRUNCATED] 
+
+> .Last <- function() {
++     sessionInfo()
++ }
+> 
+> 
+> library(stargazer)
+> 
+> # let's get the noncompliant 
+> # JIRA extract: select Task, Noncompliant = Yes. Verify and cleanup any pending. Download Excel file.
+> # Columns will depend on view. At a minimu, AEAREP number, Manuscript Number, Journal, openICPSR ID
+> # .... Key	Summary	Manuscript Central identifier	Status	Journal	openICPSRDOI	openICPSR Project Number	Assignee
+> # Summary and Assignee should be blanked
+> # other columns should be removed.
+> 
+> if ( file.exists(noncompliance.name) ) {
++   noncompliance <- read_excel(noncompliance.name,
++                               sheet = 2) 
++   message(paste0("File ",noncompliance.name," read"))
++ } else {
++   stop(paste0("Missing noncompliance file ",noncompliance.name))
++ }
+File data/jira/raw/non-compliant-raw.xlsx read
+> 
+> # get the updates. Similar to above, but filter on MCStatus = Update.
+> 
+> if ( file.exists(jira.updates.name) ) {
++   jira.updates <- read_excel(jira.updates.name,
++                              sheet = 2) 
++   message(paste0("File ",jira.updates.name," read"))
++ } else {
++   stop(paste0("Missing updates file ",jira.updates.name))
++ }
+File data/jira/raw/updates-raw.xlsx read
+> 
+> # Summarize non-compliance
+> 
+> noncompliance %>% 
++   group_by(Journal,`Manuscript Central identifier`) %>%
++   summarize(n=n()) %>%
++   ungroup() %>%
++   # we ignore the n because it is just a trick to get distinct char vars
++   group_by(Journal) %>%
++   summarize(`Non-compliant`=n()) %>%
++   ungroup() -> journal_compliance
+`summarise()` has grouped output by 'Journal'. You can override using the
+`.groups` argument.
+> 
+> journal_compliance %>%
++   summarize(`Non-compliant`=sum(`Non-compliant`)) -> summary_compliance
+> 
+> 
+> update_latexnums("mcpubnoncompl",summary_compliance$`Non-compliant`)
+Adding new row for field mcpubnoncompl
+> 
+> 
+> # Summarize updates
+> 
+> jira.updates %>% 
++   group_by(Journal,`Manuscript Central identifier`) %>%
++   summarize(n=n()) %>%
++   ungroup() %>%
++   group_by(Journal) %>%
++   summarize(`Updates`=n()) %>%
++   ungroup() -> journal_updates
+`summarise()` has grouped output by 'Journal'. You can override using the
+`.groups` argument.
+> 
+> journal_updates %>%
++   summarize(`Updates`=sum(`Updates`)) -> summary_updates
+> 
+> 
+> update_latexnums("mcpubupdates",summary_updates$`Updates`)
+Adding new row for field mcpubupdates
+> 
+> 
+> # create table by journal
+> full_join(journal_compliance,journal_updates,by="Journal") %>%
++   mutate(Updates =replace_na(as.character(Updates),""),
++          "Non-compliant" = replace_na(as.character(`Non-compliant`),"")) %>%
++ stargazer(style = "aer",
++           summary = FALSE,
++           out = file.path(tables,"n_compliance_manuscript.tex"),
++           out.header = FALSE,
++           float = FALSE,
++           rownames = FALSE
++ )
+
+% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Thu, Mar 02, 2023 - 03:41:51 AM
+\begin{tabular}{@{\extracolsep{5pt}} ccc} 
+\toprule 
+Journal & Non-compliant & Updates \\ 
+\midrule AEJ:Applied Economics & 1 &  \\ 
+AEJ:Economic Policy & 1 & 1 \\ 
+AEJ:Macro & 1 & 1 \\ 
+AER & 5 & 10 \\ 
+AER:Insights & 1 &  \\ 
+JEP & 3 &  \\ 
+AEA P&P &  & 1 \\ 
+\bottomrule 
+\end{tabular} 
+> 
+> # create table by update type
+> 
+> jira.updates %>% 
++   group_by(`Update type`,`Manuscript Central identifier`) %>%
++   summarize(n=n()) %>%
++   ungroup() %>%
++   group_by(`Update type`) %>%
++   # here we actually allow for multiple updates per MC
++   summarize(`Manuscripts`=sum(n)) %>%
++   rename(Source = `Update type`) %>%
++   ungroup() -> update_types
+`summarise()` has grouped output by 'Update type'. You can override using the
+`.groups` argument.
+> 
+> 
+> 
+> # create table by journal
+> update_types %>%
++   mutate(Manuscripts =replace_na(as.character(Manuscripts),"")) %>%
++   stargazer(style = "aer",
++             summary = FALSE,
++             out = file.path(tables,"n_updates_manuscript.tex"),
++             out.header = FALSE,
++             float = FALSE,
++             rownames = FALSE
++ 
++   )
+
+% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Thu, Mar 02, 2023 - 03:41:51 AM
+\begin{tabular}{@{\extracolsep{5pt}} cc} 
+\toprule 
+Source & Manuscripts \\ 
+\midrule Data Editor & 3 \\ 
+Faculty & 2 \\ 
+Other & 2 \\ 
+Student & 6 \\ 
+\bottomrule 
+\end{tabular} 
+> 
+> proc.time()
+   user  system elapsed 
+  1.559   1.388   1.374 

@@ -1,0 +1,398 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Tabulate statistics and make graphs for the AEA data editor report
+> # Harry Son
+> # 2/18/2021
+> 
+> # Inputs
+> #   - file.path(jiraanon,"jira.anon.RDS") 
+> #   - file.path(temp,"jira.others.RDS)
+> # Outputs
+> 
+> 
+> ### Load libraries 
+> ### Requirements: have library *here*
+> source(here::here("global-libraries.R"),echo=TRUE)
+
+> options(repos = c(REPO_NAME = "https://packagemanager.rstudio.com/all/__linux__/focal/2021-12-01+MTo2NjQ1NDU1LDI6NDUyNjIxNTtCRjhCNTA0Mw"))
+
+> pkgTest <- function(x) {
++     if (!require(x, character.only = TRUE)) {
++         install.packages(x, dep = TRUE)
++         if (!require(x, charact .... [TRUNCATED] 
+
+> pkgTest.github <- function(libname, source, pkgname = libname) {
++     if (!require(libname, character.only = TRUE)) {
++         if (pkgname == "")  .... [TRUNCATED] 
+
+> global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
++     "stringr", "readr", "splitstackshape", "digest", "remotes", 
++     "readxl", "write ..." ... [TRUNCATED] 
+
+> results <- sapply(as.list(global.libraries), pkgTest)
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: here
+here() starts at /home/rstudio
+Loading required package: tidyr
+Loading required package: tibble
+Loading required package: stringr
+Loading required package: readr
+Loading required package: splitstackshape
+Loading required package: digest
+Loading required package: remotes
+Loading required package: readxl
+Loading required package: writexl
+Loading required package: ggplot2
+Loading required package: ggthemes
+Loading required package: janitor
+
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+Loading required package: dataverse
+
+> pkgTest.github("data.table", "Rdatatable")
+Loading required package: data.table
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+[1] "OK"
+
+> pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
+Loading required package: stargazer
+
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer 
+
+[1] "OK"
+> source(here::here("programs","config.R"),echo=TRUE)
+
+> process_anon <- TRUE
+
+> download_anon <- TRUE
+
+> firstday <- "2021-12-01"
+
+> lastday <- "2022-11-30"
+
+> basepath <- here::here()
+
+> setwd(basepath)
+
+> jira.anon.partial <- file.path("data", "jira", "anon")
+
+> jiraanon <- file.path(basepath, jira.anon.partial)
+
+> manual <- file.path(basepath, "data", "manual")
+
+> jira.raw <- file.path("data", "jira", "raw")
+
+> icpsrbase <- file.path(basepath, "data", "icpsr")
+
+> icpsr.utilization.date <- "2022-12-07"
+
+> icpsr.utilization.file <- paste0("utilizationReport-", 
++     icpsr.utilization.date, ".csv")
+
+> zenodobase <- file.path(basepath, "data", "zenodo")
+
+> jira.anon.name <- file.path(jiraanon, "jira.anon.RDS")
+
+> jira.anon.commit <- "01b56117b4eaa65671f2b60d804cf6b176e1a6ce"
+
+> jira.anon.sha256 <- "08b93c4a60d4bf02a4394f37da2ae16880ab89482278f98e74e0f9552c459a8e"
+
+> jira.anon.sha512 <- "c8d828bc34bb965a57aab0e4446e0b06b7e55329f0600a4bb8e6d2d75908f4c14340a9f7ea6fe4e6eae103ffdb1d019aab313956be52c6971bf3c89633ecc31 ..." ... [TRUNCATED] 
+
+> jira.anon.urlbase <- paste0("https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/", 
++     jira.anon.commit)
+
+> jira.anon.url <- file.path(jira.anon.urlbase, "data", 
++     "anon", "jira.anon.RDS")
+
+> jira.members.url <- file.path(jira.anon.urlbase, "data", 
++     "replicationlab_members.txt")
+
+> jira.members.name <- file.path(jiraanon, "replicationlab_members.txt")
+
+> noncompliance.name <- file.path(jira.raw, "non-compliant-raw.xlsx")
+
+> jira.updates.name <- file.path(jira.raw, "updates-raw.xlsx")
+
+> scholarone <- file.path(basepath, "data", "scholarone")
+
+> scholarone.file <- "dataEditorReport_20211118-20221117.xlsx"
+
+> scholarone.name <- file.path(scholarone, scholarone.file)
+
+> scholarone.prev <- "dataEditorReport_20201128-20211127Revised.xlsx"
+
+> scholarone.skip <- 31
+
+> scholarone.skip2 <- 44
+
+> scholarone.pskip <- 33
+
+> images <- file.path(basepath, "images")
+
+> tables <- file.path(basepath, "tables")
+
+> programs <- file.path(basepath, "programs")
+
+> temp <- file.path(basepath, "data", "temp")
+
+> latexnums.Rda <- file.path(tables, "latexnums.Rda")
+
+> latexnums.tex <- file.path(tables, "latexnums.tex")
+
+> for (dir in list(images, tables, programs, temp)) {
++     if (file.exists(dir)) {
++     }
++     else {
++         dir.create(file.path(dir))
++     }
+ .... [TRUNCATED] 
+
+> set.seed(20201201)
+
+> pkgTest("tibble")
+[1] "OK"
+
+> if (file.exists(latexnums.Rda)) {
++     print(paste0("File for export to LaTeX found: ", latexnums.Rda))
++ } else {
++     latexnums <- tibble(field  .... [TRUNCATED] 
+[1] "File for export to LaTeX found: /home/rstudio/tables/latexnums.Rda"
+
+> update_latexnums <- function(field, value) {
++     latexnums <- readRDS(latexnums.Rda)
++     if (any(latexnums$field == field)) {
++         message( .... [TRUNCATED] 
+
+> .Last <- function() {
++     sessionInfo()
++ }
+> 
+> ## Non-standard - install of a page with same name
+> library(stargazer)
+> 
+> # Get the data
+> # Read in data extracted from openICPSR,
+> # This varies from year to year
+> 
+> readin <- read_excel(file.path(icpsrbase,"AEA-Projects-Query-Results.xlsx")) %>%
++   unite(title, starts_with("..."),na.rm = TRUE) %>% 
++   unite(Title,Title, title) %>%
++   separate(Created,c("Created.Date","Created.Time"),sep="T") %>%
++   mutate(date=parse_date(Created.Date)) %>%
++   filter(date >= firstday & date <= lastday )
+New names:
+• `` -> `...6`
+• `` -> `...7`
+• `` -> `...8`
+• `` -> `...9`
+• `` -> `...10`
+> 
+> icpsr.actual_lastday <- readin %>% 
++   summarize(lastday=max(date)) %>%
++   pull(lastday) %>% as.character()
+> 
+> # QA
+> summary(readin)
+   Identifier       fileCount        size bytes        Created.Date      
+ Min.   :155821   Min.   :   1.0   Min.   :6.534e+03   Length:427        
+ 1st Qu.:163341   1st Qu.:  13.0   1st Qu.:2.012e+06   Class :character  
+ Median :169121   Median :  40.0   Median :3.162e+07   Mode  :character  
+ Mean   :169452   Mean   : 120.4   Mean   :2.393e+09                     
+ 3rd Qu.:175452   3rd Qu.: 133.0   3rd Qu.:6.661e+08                     
+ Max.   :182982   Max.   :1000.0   Max.   :6.923e+10                     
+ Created.Time          Title                date           
+ Length:427         Length:427         Min.   :2021-12-01  
+ Class :character   Class :character   1st Qu.:2022-02-23  
+ Mode  :character   Mode  :character   Median :2022-04-29  
+                                       Mean   :2022-05-08  
+                                       3rd Qu.:2022-07-16  
+                                       Max.   :2022-11-15  
+> 
+> 
+> update_latexnums("pkgcount",nrow(readin))
+Adding new row for field pkgcount
+> update_latexnums("pkglastday",icpsr.actual_lastday)
+Adding new row for field pkglastday
+> 
+> 
+> 
+> utilizationReport <- read_csv(file.path(icpsrbase,icpsr.utilization.file)) %>%
++   select(Project.ID = "Study ID",
++          Status,
++          Views,
++          Downloads  = "Download",
++          Updated.Date = "Updated Date") %>%
++   # blacklist - these are in an ambiguous state
++   mutate(exclude = (Project.ID %in% c(109644,110581,110621,110902,111003))) %>%
++   filter(exclude == FALSE) %>%
++   filter(Status %in% c("PUBLISHED","NEW VERSION IN PROGRESS","SUBMITTED") ) %>%
++   mutate(is_published = (Views >0))
+Rows: 4779 Columns: 7
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (3): Project Name, Status, Depositor Email
+dbl  (3): Study ID, Views, Download
+dttm (1): Updated Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+> 
+> summary(utilizationReport)
+   Project.ID        Status              Views           Downloads      
+ Min.   :109703   Length:4467        Min.   :    0.0   Min.   :   0.00  
+ 1st Qu.:113360   Class :character   1st Qu.:  346.0   1st Qu.:  17.00  
+ Median :114496   Mode  :character   Median :  467.0   Median :  37.00  
+ Mean   :121765                      Mean   :  565.9   Mean   :  66.64  
+ 3rd Qu.:119155                      3rd Qu.:  663.0   3rd Qu.:  77.00  
+ Max.   :183445                      Max.   :27887.0   Max.   :1889.00  
+  Updated.Date                     exclude        is_published   
+ Min.   :2019-08-20 15:21:01.25   Mode :logical   Mode :logical  
+ 1st Qu.:2019-10-12 10:50:00.29   FALSE:4467      FALSE:296      
+ Median :2019-10-13 02:22:56.85                   TRUE :4171     
+ Mean   :2020-05-25 01:28:19.17                                  
+ 3rd Qu.:2020-08-30 06:37:28.96                                  
+ Max.   :2022-12-07 17:18:46.97                                  
+> 
+> # we save this filtered file
+> saveRDS(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
+> write_csv(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.csv"))
+> 
+>                             
+> 
+> # cleanup
+> icpsr <- readin %>%
++   select(Project.ID              = Identifier,
++          openICPSR.title         = Title,
++          fileCount,
++          Total.File.Size         = "size bytes",
++          Created.Date            ,
++          date
++   ) 
+> 
+> ## Distribution of replication packages
+> icpsr.file_size <- icpsr %>% 
++   distinct(Project.ID,.keep_all = TRUE) %>%
++   mutate(date_created=as.Date(substr(Created.Date, 1,10), "%Y-%m-%d")) %>%
++   filter(date_created >= as.Date(firstday)-30, date_created <= lastday) %>%
++   transform(filesize=Total.File.Size/(1024^3)) %>% # in GB
++   transform(filesizemb=Total.File.Size/(1024^2)) %>% # in MB
++   transform(intfilesize=round(filesize))
+> 
+> # get some stats
+> icpsr.file_size %>% 
++   summarize(n   = n(),
++             files=sum(fileCount),
++             mean=round(mean(filesize),2),
++             median=round(median(filesize),2),
++             q75=round(quantile(filesize,0.75),2),
++             sum=round(sum(filesize),2)) -> icpsr.stats.gb
+> 
+> icpsr.file_size %>% 
++     summarize(n   = n(),
++               files=sum(fileCount),
++               mean=round(mean(filesizemb),2),
++             median=round(median(filesizemb),2),
++             q75=round(quantile(filesizemb,0.75),2),
++             sum=round(sum(filesizemb),2)) -> icpsr.stats.mb
+> 
+> saveRDS(icpsr.stats.mb,file=file.path(temp,"icpsr.stats.mb.Rds"))
+> saveRDS(icpsr.stats.gb,file=file.path(temp,"icpsr.stats.gb.Rds"))
+> 
+> icpsr.file_size %>% 
++   group_by(intfilesize) %>% 
++   summarise(n=n()) %>% 
++   ungroup() %>% 
++   mutate(percent=100*n/sum(n)) -> icpsr.stats1
+> 
+> update_latexnums("pkgsizetwog",icpsr.stats1 %>% 
++                              filter(intfilesize > 2) %>% 
++                              summarize(percent=sum(percent)) %>% round(0))
+Adding new row for field pkgsizetwog
+> update_latexnums("pkgsizetwentyg",icpsr.stats1 %>% 
++                               filter(intfilesize >19) %>% 
++                               summarize(percent=sum(percent)) %>% round(0))
+Adding new row for field pkgsizetwentyg
+> 
+> 
+> update_latexnums("pkgsizetotalgb",icpsr.stats.gb$sum)
+Adding new row for field pkgsizetotalgb
+> update_latexnums("pkgsizetotaltb",round(icpsr.stats.gb$sum/1024,0))
+Adding new row for field pkgsizetotaltb
+> update_latexnums("pkgsizemean",icpsr.stats.mb$mean)
+Adding new row for field pkgsizemean
+> update_latexnums("pkgsizemedian",icpsr.stats.mb$median)
+Adding new row for field pkgsizemedian
+> update_latexnums("pkgsizeqsvntyfv",icpsr.stats.mb$q75)
+Adding new row for field pkgsizeqsvntyfv
+> update_latexnums("pkgfilesT",round(icpsr.stats.mb$files/1000,0))
+Adding new row for field pkgfilesT
+> update_latexnums("pkgfiles",icpsr.stats.mb$files)
+Adding new row for field pkgfiles
+> 
+> # graph it all
+> 
+> dist_size <- icpsr.file_size %>%
++   transform(intfilesize=pmin(round(filesize),10,na.rm = TRUE)) %>%
++   group_by(intfilesize) %>%
++   summarise(count=n())
+> 
+> 
+> plot_filesize_dist <- ggplot(dist_size, aes(x = intfilesize,y=count)) +
++   geom_bar(stat="identity", colour="black", fill="grey")+
++   theme_classic() +
++   labs(x = "GB",
++        y = "Number of Packages", 
++        title = "Size distribution of replication packages")
+> 
+> ggsave(file.path(images,"plot_filesize_dist.png"), 
++        plot_filesize_dist  +
++          labs(y=element_blank(),title=element_blank()),
++        width=7,height=3,units="in")
+> #plot_filesize_dist
+> 
+> proc.time()
+   user  system elapsed 
+  1.885   1.600   2.054 

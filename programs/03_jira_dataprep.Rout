@@ -1,0 +1,472 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Tabulate statistics and make graphs for the AEA data editor report
+> # Originally written by Harry Son
+> # 2021-12-30
+> 
+> # Inputs
+> #   - file.path(jiraanon,"jira.anon.RDS") 
+> # Outputs
+> 
+> 
+> ### Load libraries 
+> ### Requirements: have library *here*
+> source(here::here("global-libraries.R"),echo=TRUE)
+
+> options(repos = c(REPO_NAME = "https://packagemanager.rstudio.com/all/__linux__/focal/2021-12-01+MTo2NjQ1NDU1LDI6NDUyNjIxNTtCRjhCNTA0Mw"))
+
+> pkgTest <- function(x) {
++     if (!require(x, character.only = TRUE)) {
++         install.packages(x, dep = TRUE)
++         if (!require(x, charact .... [TRUNCATED] 
+
+> pkgTest.github <- function(libname, source, pkgname = libname) {
++     if (!require(libname, character.only = TRUE)) {
++         if (pkgname == "")  .... [TRUNCATED] 
+
+> global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
++     "stringr", "readr", "splitstackshape", "digest", "remotes", 
++     "readxl", "write ..." ... [TRUNCATED] 
+
+> results <- sapply(as.list(global.libraries), pkgTest)
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: here
+here() starts at /home/rstudio
+Loading required package: tidyr
+Loading required package: tibble
+Loading required package: stringr
+Loading required package: readr
+Loading required package: splitstackshape
+Loading required package: digest
+Loading required package: remotes
+Loading required package: readxl
+Loading required package: writexl
+Loading required package: ggplot2
+Loading required package: ggthemes
+Loading required package: janitor
+
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+Loading required package: dataverse
+
+> pkgTest.github("data.table", "Rdatatable")
+Loading required package: data.table
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+[1] "OK"
+
+> pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
+Loading required package: stargazer
+
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer 
+
+[1] "OK"
+> source(here::here("programs","config.R"),echo=TRUE)
+
+> process_anon <- TRUE
+
+> download_anon <- TRUE
+
+> firstday <- "2021-12-01"
+
+> lastday <- "2022-11-30"
+
+> basepath <- here::here()
+
+> setwd(basepath)
+
+> jira.anon.partial <- file.path("data", "jira", "anon")
+
+> jiraanon <- file.path(basepath, jira.anon.partial)
+
+> manual <- file.path(basepath, "data", "manual")
+
+> jira.raw <- file.path("data", "jira", "raw")
+
+> icpsrbase <- file.path(basepath, "data", "icpsr")
+
+> icpsr.utilization.date <- "2022-12-07"
+
+> icpsr.utilization.file <- paste0("utilizationReport-", 
++     icpsr.utilization.date, ".csv")
+
+> zenodobase <- file.path(basepath, "data", "zenodo")
+
+> jira.anon.name <- file.path(jiraanon, "jira.anon.RDS")
+
+> jira.anon.commit <- "01b56117b4eaa65671f2b60d804cf6b176e1a6ce"
+
+> jira.anon.sha256 <- "08b93c4a60d4bf02a4394f37da2ae16880ab89482278f98e74e0f9552c459a8e"
+
+> jira.anon.sha512 <- "c8d828bc34bb965a57aab0e4446e0b06b7e55329f0600a4bb8e6d2d75908f4c14340a9f7ea6fe4e6eae103ffdb1d019aab313956be52c6971bf3c89633ecc31 ..." ... [TRUNCATED] 
+
+> jira.anon.urlbase <- paste0("https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/", 
++     jira.anon.commit)
+
+> jira.anon.url <- file.path(jira.anon.urlbase, "data", 
++     "anon", "jira.anon.RDS")
+
+> jira.members.url <- file.path(jira.anon.urlbase, "data", 
++     "replicationlab_members.txt")
+
+> jira.members.name <- file.path(jiraanon, "replicationlab_members.txt")
+
+> noncompliance.name <- file.path(jira.raw, "non-compliant-raw.xlsx")
+
+> jira.updates.name <- file.path(jira.raw, "updates-raw.xlsx")
+
+> scholarone <- file.path(basepath, "data", "scholarone")
+
+> scholarone.file <- "dataEditorReport_20211118-20221117.xlsx"
+
+> scholarone.name <- file.path(scholarone, scholarone.file)
+
+> scholarone.prev <- "dataEditorReport_20201128-20211127Revised.xlsx"
+
+> scholarone.skip <- 31
+
+> scholarone.skip2 <- 44
+
+> scholarone.pskip <- 33
+
+> images <- file.path(basepath, "images")
+
+> tables <- file.path(basepath, "tables")
+
+> programs <- file.path(basepath, "programs")
+
+> temp <- file.path(basepath, "data", "temp")
+
+> latexnums.Rda <- file.path(tables, "latexnums.Rda")
+
+> latexnums.tex <- file.path(tables, "latexnums.tex")
+
+> for (dir in list(images, tables, programs, temp)) {
++     if (file.exists(dir)) {
++     }
++     else {
++         dir.create(file.path(dir))
++     }
+ .... [TRUNCATED] 
+
+> set.seed(20201201)
+
+> pkgTest("tibble")
+[1] "OK"
+
+> if (file.exists(latexnums.Rda)) {
++     print(paste0("File for export to LaTeX found: ", latexnums.Rda))
++ } else {
++     latexnums <- tibble(field  .... [TRUNCATED] 
+[1] "File for export to LaTeX found: /home/rstudio/tables/latexnums.Rda"
+
+> update_latexnums <- function(field, value) {
++     latexnums <- readRDS(latexnums.Rda)
++     if (any(latexnums$field == field)) {
++         message( .... [TRUNCATED] 
+
+> .Last <- function() {
++     sessionInfo()
++ }
+> 
+> 
+> # Read in data extracted from Jira, anonymized
+> 
+> if ( file.exists(jira.anon.name) ) {
++   message("File exists, proceeding.")
++ } else {
++   message("Attempting to download file")
++   try(download.file(jira.anon.url,jira.anon.name,mode="wb"))
++   if ( file.exists(jira.anon.name) ) {
++     message("Download successful, proceeding.")
++   } else {
++     stop("Download failed. Please investigate")
++   }
++ }
+File exists, proceeding.
+> 
+> jira.anon <- readRDS(jira.anon.name) 
+> #
+> # This should be compared to the published version.
+> #
+> jira.test.chksum <- digest(jira.anon,algo="sha256")
+> 
+> if ( jira.test.chksum == jira.anon.sha256) {
++   message("SHA256 checksum verified.")
++ } else {
++   stop("SHA256 fails, please verify that you are using the same file. Update config.R if necessary.")
++ }
+SHA256 checksum verified.
+> 
+> # A list of non-issues, typically for information-only
+> # This code is not robust, and should be changed at some point.
+> jira.pyear.raw <- jira.anon %>%
++   mutate(orig_order = row_number()) %>%
++   filter(date_created >= firstday, date_created < lastday) 
+> 
+> jira.pyear <- jira.pyear.raw %>%
++   arrange(ticket,date_updated,orig_order) %>%
++   # identify only the status changes
++   mutate(status_change = if_else(str_detect(Changed.Fields,"Status"),"yes","no")) %>%
++   filter(status_change=="yes"|received=="Yes") %>%
++   # remove the subtasks
++   mutate(subtask_y=ifelse(is.na(subtask),"No",ifelse(subtask!="","Yes",""))) %>%
++   filter(subtask_y=="No") %>%
++   #filter(Journal != "AEA P&P") %>% ## Removing all P&P  
++   # process software and reasons
++     cSplit("Software.used",",")  %>%
++     mutate(reason1=grepl("Discrepancy",reason.failure, ## 8 reasons for failutre to reproduce
++                        fixed = "TRUE"),
++          reason2=grepl("Bugs",reason.failure,
++                        fixed = "TRUE"),
++          reason3=grepl("Insufficient",reason.failure,
++                        fixed = "TRUE"),
++          reason4=grepl("Software",reason.failure,
++                        fixed = "TRUE"),
++          reason5=grepl("functional",reason.failure,
++                        fixed = "TRUE"),
++          reason6=grepl("Data not available",reason.failure,
++                        fixed = "TRUE"),
++          reason6.1=grepl("Data,not,available",reason.failure,
++                          fixed = "TRUE"),
++          reason7=grepl("Data missing",reason.failure,
++                        fixed = "TRUE"),
++          reason7.1=grepl("Data,missing",reason.failure,
++                          fixed = "TRUE"),
++          reason8=grepl("Code missing",reason.failure,
++                        fixed = "TRUE"),
++          reason8.1=grepl("Code,missing",reason.failure,
++                          fixed = "TRUE")) %>% 
++   mutate(reason1=case_when(reason1==TRUE ~ "Discrepancy in Output",
++                            TRUE ~ ""),
++          reason2=case_when(reason2==TRUE ~ "Bugs in code",
++                            TRUE ~ ""),
++          reason3=case_when(reason3==TRUE ~ "Insufficient time available to replicator",
++                            TRUE ~ ""),
++          reason4=case_when(reason4==TRUE ~ "Software not available to replicator",
++                            TRUE ~ ""),
++          reason5=case_when(reason5==TRUE ~ "Code not functional",
++                            TRUE ~ ""),
++          reason6=case_when(reason6==T ~ "Data not available",
++                            reason6.1==T ~ "Data not available",
++                            TRUE ~ ""),
++          reason7=case_when(reason7==T ~ "Data missing",
++                            reason7.1==T ~ "Data missing",
++                            TRUE ~ ""),
++          reason8=case_when(reason8==T ~ "Code missing",
++                            reason8.1==T ~ "Code missing",
++                            TRUE ~ "")) %>%
++   select(-reason6.1,-reason7.1,-reason8.1) 
+Warning messages:
+1: In type.convert.default(X[[i]], ...) :
+  'as.is' should be specified by the caller; using TRUE
+2: In type.convert.default(X[[i]], ...) :
+  'as.is' should be specified by the caller; using TRUE
+3: In type.convert.default(X[[i]], ...) :
+  'as.is' should be specified by the caller; using TRUE
+4: In type.convert.default(X[[i]], ...) :
+  'as.is' should be specified by the caller; using TRUE
+5: In type.convert.default(X[[i]], ...) :
+  'as.is' should be specified by the caller; using TRUE
+> 
+> #### Break out of the issues
+> # not sure we need this
+> jira.issues.breakout <- jira.pyear %>%
++   arrange(desc(row_number())) %>%
++   group_by(ticket) %>%
++   mutate(status_order =  row_number(), st = "Status") %>%
++   mutate(new1 = paste(st, status_order, sep="")) %>%
++   select(ticket,Status,new1) %>%
++   pivot_wider(names_from = new1, values_from = "Status")
+> 
+> # identifying the list of received tickets
+> ji <- jira.pyear %>%
++   select(ticket,Journal) %>%
++   distinct(ticket, .keep_all = TRUE) 
+> 
+> # identifying the list of issues went through alternate workflow
+> ji_alt <- jira.pyear %>%
++   filter(Status == "Alternate"|Status=="Alternate workflow") %>%
++   select(ticket) %>%
++   distinct() %>%
++   mutate(alternate="Yes")
+> 
+> # identifying the list of submitted issues 
+> jis <- jira.pyear %>%
++   filter(Status == "Submitted to MC" & Journal != "AEA P&P") %>%
++   select(ticket) %>%
++   distinct() %>%
++   mutate(submitted="Yes")
+> 
+> # figure out the final status of the issue as of 12/01/
+> 
+> jifstatus <- jira.pyear %>%
++   arrange(ticket,date_updated,desc(orig_order)) %>%
++   group_by(ticket) %>%
++   mutate(within_order=row_number(),
++          max_status  = n()) %>%
++   filter(max_status == within_order) %>%
++   select(ticket,final_status = Status)
+> 
+> 
+> 
+> # categorize issues: P&P, Submitted, Not yet submitted, Alternate workflow, Others.
+> jira.issues.breakout.early <- ji %>%  
++   left_join(jis,by="ticket") %>%
++   left_join(ji_alt,by="ticket") %>%
++   transform(submitted=ifelse(is.na(submitted),"No",as.character(submitted)),
++             alternate=ifelse(is.na(alternate),"No",as.character(alternate))) %>%
++   select(ticket,Journal,submitted,alternate) %>%
++   left_join(jifstatus, by="ticket") 
+> 
+> # we now use the override file, if there is one, to correct some values
+> # before classifiying further
+> 
+> 
+> 
+> if (!file.exists(file.path(temp,"jira.others.xlsx")) ) {
++   message("File not found. Run through this code once, then read instructions.")
++   jira.issues.breakout.late <- jira.issues.breakout.early
++ } else {
++   message("File exists, proceeding.")
++   jira.override <- read_excel(file.path(temp,"jira.others.xlsx"),
++                               sheet="override")
++   jira.issues.breakout.late <- jira.issues.breakout.early %>%
++     left_join(jira.override,by="ticket",suffix = c("",".override")) %>%
++     mutate(submitted = if_else(!is.na(submitted != submitted.override),
++                                submitted.override,submitted),
++            alternate = if_else(!is.na(alternate != alternate.override),
++                                alternate.override,alternate),
++            final_status = if_else(!is.na(final_status != final_status.override),
++                                final_status.override,final_status))
++ }
+File exists, proceeding.
+> 
+> jira.issues.breakout <- jira.issues.breakout.late %>%
++   # collapse outcomes
++   transform(outcome=case_when(
++                     submitted == "Yes" ~ "Submitted",
++                     final_status %in% c("Open","Assigned","In Progress",
++                                         "Code","Data",
++                                            "Report Under Review","Write Preliminary Report",
++                                            "Verification","Pre-Approved","Approved","Data",
++                                            "Waiting for info","Waiting for external report",
++                                            "Writing Report") ~ "Not yet submitted",
++                     final_status %in% c("Incomplete","Blocked") ~ "Incomplete",
++                     alternate=="Yes" ~ "Alternate",
++                     TRUE ~ "Others"))  
+> 
+> # summarize the breakdown of the cases
+> summary.breakout <- jira.issues.breakout %>%  
++   group_by(outcome) %>%
++   summarise(n_outcome = n_distinct(ticket)) 
+> 
+> ## separate the "Others" case
+> jira.others <- jira.issues.breakout %>%
++   filter(outcome=="Others"|outcome=="Alternate") 
+> 
+> # we will need it again
+> 
+> ## filter out the "others" case
+> ## Actually let's not - what we would need is to see if we obtained the case 
+> ## from the editorial office - don't have a good way to flag source right now
+> ## Parsing of title might work.
+> 
+> #jira.pyear <- jira.pyear %>%
+> #  left_join(jira.others,by="ticket") %>%
+> #  transform(others=ifelse(is.na(others),"No",as.character(others))) %>%
+> #  filter(others=="No") 
+> 
+> # This filters for the cases **submitted** in the past 12 months
+> issues_all <- jira.pyear %>%
++   filter(!(Journal=="")) %>%
++   select(ticket) %>%
++   distinct() %>% nrow()
+> 
+> manuscript_all <- jira.pyear %>%
++   filter(!(Journal=="")) %>%
++   select(mc_number_anon) %>% 
++   distinct() %>% nrow()
+> 
+> ## Total submitted records
+> 
+> 
+> jira.filter.submitted <- jira.pyear %>%  
++   filter(Status == "Submitted to MC" & Journal != "AEA P&P") 
+> 
+> # we will re-use these 
+> saveRDS(jira.pyear,file=file.path(temp,"jira.pyear.RDS"))
+> saveRDS(jira.filter.submitted,file=file.path(temp,"jira.submitted.RDS"))
+> saveRDS(jira.issues.breakout ,file=file.path(temp,"jira.breakout.RDS"))
+> saveRDS(jira.others,file=file.path(temp,"jira.others.RDS"))
+> 
+> # this file will be used to revise the flow above. 
+> # Copy the sheet "output" to a sheet"override", edit, and then run this code again.
+> 
+> if (file.exists(file.path(temp,"jira.others.xlsx")) ) {
++   message("File found. Preserving overrides, then read instructions.")
++   override <- read_excel(path=file.path(temp,"jira.others.xlsx"),
++                          sheet="override")
++ } else {
++   # file doesn't exist, we instantiate the override sheet with the 
++   # current list
++   override <- jira.others
++ }
+File found. Preserving overrides, then read instructions.
+> # now write the file.
+>   write_xlsx(list(output=jira.others,override=override),
++            path=file.path(temp,"jira.others.xlsx"))
+> 
+> 
+> # we used the start and end date here, so write them out
+> update_latexnums("firstday",firstday)
+Adding new row for field firstday
+> update_latexnums("lastday",lastday)
+Adding new row for field lastday
+> #update_latexnums("jiraissues",issues_all)
+> #update_latexnums("jiramcs",manuscript_all)
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  1.650   1.460   1.529 

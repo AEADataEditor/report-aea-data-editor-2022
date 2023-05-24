@@ -1,0 +1,176 @@
+% AEJ-Article.tex for AEA last revised 22 June 2011
+\documentclass[PP]{AEA}
+
+%%%%%% NOTE FROM OVERLEAF: The mathtime package is no longer publicly available nor distributed. We recommend using a different font package e.g. mathptmx if you'd like to use a Times font.
+\usepackage{mathptmx}
+
+% The mathtime package uses a Times font instead of Computer Modern.
+% Uncomment the line below if you wish to use the mathtime package:
+%\usepackage[cmbold]{mathtime}https://www.overleaf.com/project/5de54d6638f785000167866a
+% Note that miktex, by default, configures the mathtime package to use commercial fonts
+% which you may not have. If you would like to use mathtime but you are seeing error
+% messages about missing fonts (mtex.pfb, mtsy.pfb, or rmtmi.pfb) then please see
+% the technical support document at http://www.aeaweb.org/templates/technical_support.pdf
+% for instructions on fixing this problem.
+
+% Note: you may use either harvard or natbib (but not both) to provide a wider
+% variety of citation commands than latex supports natively. See below.
+
+% Uncomment the next line to use the natbib package with bibtex 
+\usepackage{url}
+\urlstyle{same} % makes the font the same
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{acronym}
+\usepackage[names]{xcolor}
+\usepackage{graphicx}
+\usepackage{csvsimple}
+% Uncomment the next line to use the harvard package with bibtex
+%\usepackage[abbr]{harvard}
+\usepackage{etoolbox}
+\usepackage{geometry}
+\usepackage{caption} % to re-use counters
+\usepackage{threeparttable}
+\usepackage{capt-of}
+
+\newtoggle{fancy}
+\togglefalse{fancy}
+
+\newtoggle{draft}
+%\toggletrue{draft}
+\togglefalse{draft}
+
+\newtoggle{final}
+%\togglefalse{final}
+\toggletrue{final}
+%\iftoggle{final}{\togglefalse{draft}}{}
+
+
+\iftoggle{draft}{
+\usepackage{draftwatermark}
+\SetWatermarkText{DRAFT}
+\SetWatermarkScale{0.5}
+\SetWatermarkLightness{0.85}%
+}{\usepackage[final]{draftwatermark}}
+
+\usepackage{xspace}
+% to adjust floats
+\usepackage{placeins}
+% to read the table
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{csvsimple}
+\usepackage{longtable}
+
+\usepackage{textcomp}
+
+
+\iftoggle{final}{
+\usepackage[disable]{todonotes}
+\newcommand{\misscitep}[2]{\citep{#2}}
+\newcommand{\misscitet}[2]{\citet{#2}}
+}{
+\usepackage{todonotes}
+\geometry{verbose,letterpaper,
+	tmargin=1in,bmargin=1in,lmargin=1in,rmargin=2in}
+\setlength{\marginparwidth}{1.9in}
+\newcommand{\misscitep}[2]{\todo[color=green]{Missing citation: #1}{(\textcolor{red}{#2})}}
+\newcommand{\misscitet}[2]{\todo[color=green]{Missing citation: #1}{\textcolor{red}{#2}}}
+}
+
+
+
+% This command determines the leading (vertical space between lines) in draft mode
+% with 1.5 corresponding to "double" spacing.
+\draftSpacing{1.5}
+
+%% make somewhat tigher enumeration environments
+\usepackage{enumitem}
+\setlist[enumerate]{itemsep=0pt,parsep=0pt,topsep=1pt}
+\setlist[itemize]{itemsep=0pt,parsep=0pt}
+
+%% Acronyms
+\input{acronyms.tex}
+
+% reset colors
+\definecolor{darkblue}{rgb}{0 0 255}
+\hypersetup{colorlinks,
+breaklinks,
+citecolor=darkblue,
+linkcolor=darkblue,
+urlcolor=darkblue}
+
+% Different ways to cite URLS
+%\newcommand{\urlcite}[2]{\href{#1}{#2}
+\newcommand{\urlcite}[2]{#2\footnote{\url{#1}}}
+\newcommand{\purlcite}[2]{#2.\footnote{\url{#1}}}
+\newcommand{\curlcite}[2]{#2,\footnote{\url{#1}}}
+\newcommand{\furlcite}[2]{#2 (\url{#1})}
+
+% redefine subparagraph
+
+\renewcommand{\subparagraph}[1]{\textbf{#1}}
+
+%
+% Periods covered by the report 
+% Should be read in from R
+\input{tables/latexnums.tex}
+\input{data/registry/AEA_registryanalysis-main/Output/latexnums.tex}
+
+%\renewcommand{\firstday}{Dec 1, 2019}
+%\renewcommand{\lastday}{Nov 30, 2020}
+
+\begin{document}
+
+\title{Report for 2022 by the AEA Data Editor }
+\shortTitle{Report by Data Editor}
+\author{Lars Vilhuber\thanks{%
+Cornell University, lars.vilhuber@cornell.edu. }
+}
+\date{\today}
+\pubMonth{Dec}
+\pubYear{2022}
+\pubVolume{--}
+\pubIssue{--}
+\JEL{}
+\Keywords{reproducibility; replicability; science of science}
+
+
+
+
+\maketitle
+
+The \ac{AEA} Data Editor's  mission is to ``design  and  oversee  the  AEA  journals’  strategy for archiving and curating research data and promoting  reproducible  research'' \citep{10.1257/pandp.108.745}. The 2018 Report by the Data Editor \citep{10.1257/pandp.109.718} articulates how to implement that mission. 
+Since July 2019, we have conducted comprehensive pre-publication reproducibility checks for all regular AEA journals, developed guidance for authors, and worked with peers at societies and groups in economics and elsewhere. We currently conduct  pre-publication reproducibility checks for all AEA journals, and conduct  basic checks on replication packages for Papers and Proceedings. General policy and various auxiliary policies are listed in Appendix~\ref{sec:list-of-policies}.
+
+We also reach out to numerous data creators and providers --- both authors who have created unique data resources, and academic and commercial data providers that often provide the data for economic research --- and  discuss access to data for reproducibility checks, mechanisms to request publication approval with them, as well as generally inform them of the need for reproducibility, provenance tracing, and transparency in economic research. In some cases, we provide guidance on how to make data publication compliant with FAIR practices \citep{FORCE11FAIRDATAPRINCIPLES}, and assist them in finding additional resources. 
+We continue to coordinate with other journals, societies, and registries on all of these topics.
+
+This report also discusses progress and developments at the \rctr{}  (see Section~\ref{sec:registry}),  on behalf of the AEA Oversight Committee for Registry of Random Controlled Trials. 
+
+\input{sec_infrastructure}
+\input{sec_support}
+\input{sec_others.tex}
+\input{sec_end.tex}
+
+\begin{flushright}
+{\sc Lars Vilhuber}, \textit{Data Editor}
+\end{flushright}
+
+
+\FloatBarrier
+% Remove or comment out the next two lines if you are not using bibtex.
+%
+% NOTE: Do not modify the AEADataEditor.bib manually!
+%
+\bibliographystyle{aea-mod}
+\bibliography{paper,references,refs-zotero}
+
+% The appendix command is issued once, prior to all appendices, if any.
+\appendix
+
+\input{appendix.tex}
+
+
+\end{document}
+

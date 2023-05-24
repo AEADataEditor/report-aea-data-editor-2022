@@ -1,0 +1,69 @@
+---
+title: "JIRA Export"
+author: "Lars Vilhuber"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: 
+    keep_md: yes
+---
+
+
+AEA uses JIRA to track verification requests. The files have been anonymized, as they contain individual names. The anonymized data, and the programs to generate them, can be found in 
+
+> Vilhuber,  Lars. 2023.  "Process  data  for  the AEA  Pre-publication  Verification  Service." American Economic Association [publisher], https://doi.org/10.3886/E117876V2
+
+## Local copy
+
+```{r setup,include=FALSE}
+### Load libraries 
+### Requirements: have library *here*
+source(here::here("global-libraries.R"),echo=TRUE)
+source(here::here("programs","config.R"),echo=TRUE)
+```
+
+A copy has been provided here for convenience. It was downloaded from [`r jira.anon.urlbase`](`r jira.anon.urlbase`).
+
+## Checksums
+
+```{r verify_data}
+# Read in data extracted from Jira, anonymized
+
+message("Attempting to download file")
+try(download.file(jira.anon.url,paste0(jira.anon.name,"2"),mode="wb"))
+if ( file.exists(jira.anon.name) ) {
+    message("Download successful, proceeding.")
+} else {
+    stop("Download failed. Please investigate")
+}
+
+# Compute digests for remote and local file
+jira.anon.remote <- readRDS(paste0(jira.anon.name,"2"))
+jira.anon <- readRDS(jira.anon.name) 
+#
+# This should be compared to the published version.
+#
+jira.test.chksum <- digest(jira.anon,algo="sha256")
+
+if ( jira.test.chksum == jira.anon.sha256) {
+  message("SHA256 checksum verified.")
+} else {
+  stop("SHA256 fails, please verify that you are using the same file. Update config.R if necessary.")
+}
+
+# report it all
+chksum.table <- tibble(Note = "Checksum on file", SHA256 = jira.anon.sha256)
+chksum.table <- bind_rows(chksum.table,
+                         tibble(Note = "Remote source file", SHA256 = digest(jira.anon.remote,algo="sha256")),
+                         tibble(Note = "Local copy", SHA256 = jira.test.chksum)
+)
+                         
+```
+
+The following are the checksums associated with these files:
+
+```{r table,echo=FALSE}
+knitr::kable(chksum.table)
+```
+
+

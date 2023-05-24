@@ -1,0 +1,83 @@
+
+\section{Providing Support for Compliance with AEA Data and Code Availability Policy}
+\label{sec:dcap}
+
+Since the introduction of the \ac{AEA}'s strengthened data and code availability policy in 2019 \citep{10.1257/pandp.110.dcap}, we have monitored how authors work to comply with the policy upon first submission of their packages. To help authors, we have published and continually update guidance available at  \href{https://aeadataeditor.github.io/}{aeadataeditor.github.io}. The  template README \citep{READMEv1.1.0}, which we published with several other economics data editors,  helps authors compile all the information required for complete documentation of their data and code deposit.\footnote{The README is available at \href{https://social-science-data-editors.github.io/template_README/}{social-science-data-editors.github.io/template\_README/}.} As more and more authors provide us with the standardized README, we have observed an uptick in replication packages that can be accepted (possibly with minor edits) in the first round (see Table~\ref{tab:pre:rounds}). Compliance is not yet universal, despite the standard checklist provided and filled by all authors having a checkbox indicating self-asserted compliant use of the template README. 
+
+We have published guidance on specific topics in the form of blog posts,%
+\footnote{Blog posts by the AEA Data Editor can be found at \href{https://aeadataeditor.github.io/year-archive/}{aeadataeditor.github.io/year-archive/}.}
+%
+which are highlighted on the AEA Data Editor's Twitter account (\href{https://twitter.com/AEAData}{@AeaData}). Multiple presentations at workshops, conferences, and departmental seminars are also intended to clarify the AEA's policies on reproducibility, and convey best practices. Talks with materials are listed at \href{https://aeadataeditor.github.io/talks/}{aeadataeditor.github.io/talks/}.
+
+\subsection{Improving Findability of Replication Materials at the AEA}
+\label{sec:findability}
+
+We endeavor to make the replication packages provided by the authors broadly and easily findable. Naturally, they are linked from the article landing pages, but search engines  such as \urlcite{https://clarivate.com/webofsciencegroup/solutions/web-of-science/}{Web of Science} and \urlcite{https://scholar.google.com/}{Google Scholar} can also lead interested researchers to the replication packages directly. Authors are invited to fill out rich metadata as appropriate for their paper upon submission.\footnote{See guidance on metadata at \href{https://aeadataeditor.github.io/aea-de-guidance/data-deposit-aea.html}{aeadataeditor.github.io/aea-de-guidance/data-deposit-aea.html}.} 
+
+Authors are reminded that deposits receive their own \ac{DOI}, and should be cited in line with the Data Citation Principles \citep{Altman2013-fl,jddcp}. We continue to verify that authors cite all datasets they have used and accessed, as required by the AEA \ac{DCAP}, the AEA's citation requirements, and in line with the Data Citation Principles.  Data citations increase findability of data, allow data providers to receive proper credit, and align the Association with broader principles in the academic publishing world. The AEA's  \urlcite{https://www.aeaweb.org/journals/policies/sample-references}{Sample References} provide a style reference, and additional guidance for non-standard data sources, such as confidential or proprietary data, has been developed in collaboration with other journals and guidance by \purlcite{https://social-science-data-editors.github.io/guidance/addtl-data-citation-guidance.html}{librarians}
+
+
+
+\subsection{Compliance and Updates}
+\label{sec:compliance}
+
+We note that authors can be compliant with the policy without providing a copy of data used, as long as the reason for the inability to provide the data is acceptable, correct, and documented as part of the replication materials. 
+
+Compliance with the policy %(Table~\ref{tab:compliance}) 
+has been excellent. In some cases, we have requested data that was not initially provided, when such data could be legally and ethically provided; by the second round of assessments, compliance was generally achieved (see also our discussion of outreach to data providers).
+
+However, occasionally, a manuscript may be published while the replication package is still being updated. This leads to (temporary) non-compliance. Non-compliance may arise for technical reasons, such as when a file becomes corrupted in the upload process, preventing the deposit from being released. In other instances, researchers have notified the Data Editor of a particular aspect of non-compliance - a file may be missing, a dataset may be able to be published that was not initially provided, etc. Column 1 in Table~\ref{tab:compliance} identifies the number of such cases as of 2022-12-07,  including deposits that have not yet been published. All cases are eventually resolved, either through pre-publication amendments, or post-publication updates (see next section).
+
+
+\begin{table}[t]
+    \centering
+    \caption{Compliance and Updates}
+    \label{tab:compliance}
+    
+    \begin{threeparttable}
+    \input{tables/n_compliance_manuscript_mod}
+    \begin{tablenotes}
+    \footnotesize
+    \item[] \textit{Note}: Non-compliant deposits are a point-in-time estimate as of 2022-12-07 and do not reflect resolved non-compliance issues. Updates are unique submissions received regarding replication packages  between \firstday{} and \lastday{}. Updates are not counted in the overall count of assessments. 
+    \end{tablenotes}
+    \end{threeparttable}
+
+ \end{table}      
+ 
+
+
+\subsection{Post-publication modifications}
+
+At the time of publication, a manuscript is linked with one (or more) archived supplements, constituting the version of record. Occasionally, issues are brought to our attention by authors, readers, and data providers. Authors may have a better README, readers might have noticed a missing code or data file, or data providers might ask for a dataset to be removed because it infringes on terms of use agreed to by the author. The supplemental ``\textit{Policy on Revisions of Data and Code Deposits in the AEA Data and Code Repository}''\footnote{See Appendix~\ref{sec:list-of-policies} for a list of links to all supplemental policies.} specifies which modifications constitute a minor edit to the version of record, and which modifications lead to a higher version number, without modification of the existing version of record. In particular, any change that potentially changes a computational result or adds (untested) code will lead to a new version of the deposit being created, without changing or removing the version of record, even if the modifications fixes an error. However, the presence of replication packages that are newer than the version of record is signalled to readers via a banner, and is recorded in the metadata.
+
+We identified \mcpubupdates{} actions regarding post-publication modifications in 2022. Column~2 in Table~\ref{tab:compliance} shows the distribution across journals. Table~\ref{tab:updates} identifies who initiated the updates.   We highlight that at least two of these updates were initiated following a \textit{Replication Challenge} or \textit{Replication Game}, and we hope that we will receive more such updates. 
+
+%\begin{table}[t]
+%    \centering
+\begin{center}
+    \captionof{table}{Updates}{}
+    \label{tab:updates}
+    
+     \begin{threeparttable}
+     \input{tables/n_updates_manuscript_mod}
+ 
+    \begin{tablenotes}
+    \footnotesize
+    \item[] \textit{Note}: Unit of observation are manuscripts assessed between \firstday{} and \lastday{}. 
+    \end{tablenotes}
+    \end{threeparttable}
+\end{center}
+%\end{table}
+
+\subsection{Intellectual Property and Licenses} 
+\label{sec:ip}
+
+Authors retain  copyright for any data and code deposited by them in the \aeadcr{}, unless that copyright belongs to others and the authors have a license to republish it. The default license for all repositories based at openICPSR is the  Creative Commons Attribution (CC-BY) \citep{CreativeCommons2017}, but authors can choose their own license. All  licenses  are vetted by the Data Editor for compliance with the \ac{DCAP}. We encourage authors to consult our \purlcite{https://aeadataeditor.github.io/aea-de-guidance/licensing-guidance}{licensing guidance} 
+
+In some cases, authors may wish to publish data under more restrictive licenses or conditions, due  mostly to ethical concerns, while ensuring that replication remains possible.%
+\footnote{Examples from past years include \citet{deryugina2021data} and \citet{goncalves2021data}, which accompany \citet{deryugina_covid-19_2021} and \citet{goncalves_few_2021}, respectively.}
+In the past, we have been able to leverage multiple mechanisms in place at the openICPSR repository hosting the \aeadcr{}; however, some of those mechanisms are no longer available. Authors who wish to explore ways to make their data ethically accessible should contact the Data Editor early enough in the submission process. 
+
+The AEA replicators will sometimes access confidential or proprietary data for the purpose of verifying computational reproducibility (see Section~\ref{sec:verification}), as provided by the authors, or directly requested from the data providers via application or subscription services. Such data are not published as part of authors' replication packages. However, we do encourage authors to seek permission to share such data, where possible, and encourage data providers to allow for publication of extracts of their data, sufficient to support future reproducibility efforts.
+
+We continue to assist authors in remaining compliant with data use agreements and copyright law, to the extent possible, but authors should be aware of their potential liability in the cases of infringements. Since the summer of 2022, all authors are required to attest, via the published README, that they have ``\textit{legitimate access to and permission to use the data used}'' in the manuscript, and that they also have ``\textit{documented permission to redistribute [publish] the data}'' \citep[][pg.1]{READMEv1.1.0}. Unintentional posting of data that authors do not have permission to publish is one of the causes for replication packages being withdrawn, and thus becoming non-compliant until remediation and publication of an update (thus showing up in Table~\ref{tab:compliance}).

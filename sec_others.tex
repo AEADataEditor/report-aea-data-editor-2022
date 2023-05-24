@@ -1,0 +1,96 @@
+
+\section{Working with Other Providers of Scientific Infrastructure to Improve Support for Documenting Provenance and Replicability}
+\label{sec:coordination}
+
+An important responsibility of the AEA Data Editor is to interact with other providers of scientific infrastructure. This includes other publishers and journals, archives such as ICPSR, providers of restricted or proprietary data, metadata harvesters, and third-party verification services. 
+
+\subsection{AEA RCT Registry}
+\label{sec:registry}
+
+The \rctr{} (Registry) provides services to the economics community at large. Managed at J-PAL and funded by the AEA, registration at the Registry is mandatory for field experiments published in \ac{AER}, \ac{AERI}, \ac{AEJAPP}, and \ac{AEJPOL}, but is also used more broadly in the economics discipline, with numerous publications in top economics journals as well as field journals identifying pre-registration in the Registry. The Registry is available at \href{https://www.socialscienceregistry.org/}{www.socialscienceregistry.org}.
+
+In collaboration with members of the AEA's \textit{Oversight Committee for Registry of Random Controlled Trials}, the AEA Data Editor and the Registry team at J-PAL have worked to improve the usability of the Registry as well as the availability of Registry data. Over the course of 2022, the Registry team rolled out numerous improvements to the infrastructure of the Registry website. While many of these were back-end improvements to keep the web app up-to-date, functional, and secure, a number were front-end changes to improve the experience of registrants and users searching for trials. A few of these are worth noting:
+\begin{itemize}
+    \item Updates to the version change system to make it easier for users to understand what changed from one version of a registration to the next.
+    \item Improved documentation, including an expanded FAQ section, more information in the registration itself, and updated documentation on the registry data snapshots archived on Dataverse \citep[see f.i.][]{DVN/TGMJFD_2022}.
+    \item Improvements to the file upload process to make it easier for registrants to upload documents, including (but not limited to) PAPs.
+\end{itemize}
+Over the course of the summer and fall of 2022, the Registry team interviewed over 60 users, soliciting views on potential improvements to the website. The results are being used to compile  a list of priority projects for next year. Suggested improvements include further improving registration guidance, increasing the registry’s connection with existing citation and index systems, including Crossref, Google Scholar, and RePEc, and providing a pre-fill option for updating registrations with post-trial information, including linked publications. 
+
+Data for the Registry is being curated and preserved in the \textit{AEA RCT Registry Dataverse} at 
+\href{https://dataverse.harvard.edu/dataverse/aearegistry}{dataverse.harvard.edu/dataverse/aearegistry}, allowing for reproducible analysis of the universe of registrations by researchers.%
+\footnote{Data shown in this report are derived from \citet{DVN/TGMJFD_2022}. End-of-year numbers for 2022 were extrapolated based on data from the first 11 months of 2022, as of 2022-12-01. }
+
+The Data Editor monitors proper reference to and citation of registrations. A registration should be cited in the text and the title footnote as, for example, ``\textit{Zhang (2017)}'' (the title footnote should also mention ``\textit{AEARCTR-0000005}''), and the references should have the appropriate entry:
+
+\begin{quote}\footnotesize
+    Zhang, Kelly. 2017. "Voter Pessimism and Electoral Accountability: Experimental Evidence from Kenya." AEA RCT Registry. May 02. https://doi.org/10.1257/rct.5-8.0.
+\end{quote}
+
+%{\color{red}Additional data to come.}
+
+While the AEA journals mentioned above remain among the few economics journals that strictly require registration, usage of the registration continues to increase strongly. As Figures~\ref{fig:registry1} and~\ref{fig:registry2} show, the rate of registrations per year continues to rise, and the registry now has over \regscumul{} registrations, which are being added at a rate of \regsyearly{} per year.  More than \registeredusers{} unique researchers are associated with these registrations (left panel, Figure~\ref{fig:registry2}), \activeusers{} of which are associated with registrations that have been active in the past 12 months. The share of pre-registrations, favored by some, surpassed post-registrations for the first time in 2021, and remains higher (right panel, Figure~\ref{fig:registry2}). 
+
+% src=https://github.com/J-PAL/AEA_registryanalysis/archive/refs/heads/main.zip
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth]{data/registry/AEA_registryanalysis-main/Output/reg_pre_year.png}
+\includegraphics[width=0.4\textwidth]{data/registry/AEA_registryanalysis-main/Output/reg_cumulative.png}
+\caption{Annual (left) and Cumulative Registrations (right) }
+    \label{fig:registry1}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth]{data/registry/AEA_registryanalysis-main/Output/registered_users.png}
+\includegraphics[width=0.4\textwidth]{data/registry/AEA_registryanalysis-main/Output/post_pre_reg.png}
+\caption{Unique registered investigators (left), Post vs Pre-registrations (right)}
+    \label{fig:registry2}
+\end{figure}
+
+\subsection{Highlighting and Preserving Data Resources}
+
+We identified Zenodo as a possible solution to preserving large-scale data resources that surpass the practical capabilities of the \aeadcr{}. By creating the ``AEA Zenodo Community,'' we are able to highlight data resources that have, in the past, often not been curated or preserved appropriately. For instance, \citet{u_s_geological_survey_2022_5830968} comprises 83GB of data, preserved from DVDs and complemented and corrected manually based on online sources. They constitute some of the input data for \citet{10.1257/app.20200398}. Similarly, \citet{ministerio_de_desarrollo_productivo_arge_2022_6568295} preserves 44 GB of daily price data  captured in 2016-2018 and used by \citet{10.1257/mac.20210172}. In both cases, the data are under liberal licenses (public domain or Creative Commons licenses), which allow for the republication of the data. 
+
+
+\subsection{Data Providers}
+\label{sec:producers}
+
+We regularly meet and communicate with academic, governmental, and commercial data providers, on behalf of specific authors or because we have identified a data provider as a frequently used resource. Discussion topics include making data citations easier, clarifying licenses, requesting blanket or streamlined data redistribution or access authorizations, or suggesting improved data curation practices to avoid repeatedly copying data from uncurated websites to the curated \aeadcr{}. 
+
+In the course of the past year, we have talked about some or all of these topics with IPUMS, the World Bank, staff at the U.S. Census Bureau, the \ac{IRS}, and the \ac{BLS}, Philipp vom Berge and Michael Oberfichtner at the (German) Institute for Employment Research (IAB), Paulo Guimarães at the \ac{BPLIM},  and Kamel Gadouche  at the French \textit{Centre d'accès sécurisé de données} (CASD). We have also talked to various research groups on how to improve data curation, visibility, and citability of the data created by their efforts. 
+
+\subsection{Economics Journals}
+
+We continue to coordinate with other data editors conducting similar activities at other journals. An informal mailing list managed by the AEA Data Editor is used to interact with others.\footnote{Journal editors are encouraged to join the mailing list by contacting the AEA Data Editor.} Mailing list members who wish to be more actively involved can participate in the development of the \purlcite{socialsciencedataeditors.github.io}{website of the Social Science Data Editors} In addition to the Data Editor of the AEA, the current group includes Miklos Kóren (Data Editor, \acl{ReStud}), Joan Llull (Data Editor, \acl{EJ} and Econometric Journal), Marie Connolly (Data Editor, \acl{CJE}), Anna Dreber Almenberg (Editor, JPE Microeconomics), and Andrea Weber (Editor, \acl{JEEA}). The website contains guidance on data citations and data availability statements, best practices for coding and data preparation, and links to various tools useful to replicators. In particular, the group coordinates the \textit{Template README} \citep{READMEv1.1.0}, which was last updated in November 2022, and which is a \textit{common} requirement across a number of journals. Furthermore, the group has developed a common standard for replication packages, which journals can use to signal that their requirements are similar to those commonly required by all endorsers of the standard \citep{datacodestandardv1}. The Data Editor  also  participates in  the Steering Committee of a group of data repository leaders at Data-PASS organized as the Journal Editors Discussion Interface (\urlcite{https://dpjedi.org/}{JEDI}).
+
+
+\subsection{Third-party verification services}
+\label{sec:3rdparty}
+
+
+We continue to rely on and have discussions with third-party verification services. As noted earlier, \jiraexternal{} reports were provided by external replicators or replication services
+%for \jiramcsexternal{} manuscripts 
+(see Table~\ref{tab:jirastats} for statistics by journal, and Appendix~\ref{app:3rdparty} for a list of third-party replicators). 
+
+\section{Working with the Economics Community to Enhance and Broaden Education on Replicable Science}
+
+Outreach through presentations and publicly available tools is a key component of an effective data and code availability policy. 
+%
+Recordings of  presentations (when available) and presentation materials are listed at the \purlcite{https://aeadataeditor.github.io/talks/}{Data Editor's website}. In addition to presentations, the Data Editor occasionally participates in \textit{Replication Challenges} or \textit{Replication Games}, where teams of researchers and students attempt to reproduce and extend papers published in leading economics journals. Such post-publication verifications are a necessary and useful check on published replication packages. Replicators may find issues that were not discovered, or discoverable, by pre-publication replicators such as the AEA Data Editor team. The Data Editor facilitates and monitors that any corrections or suggested improvements are conveyed to authors, and are reflected on replication packages via the AEA's \textit{Policy on Revisions of Data and Code Deposits} (see Appendix~\ref{sec:list-of-policies}). 
+%
+The training of replicators for the AEA's Data Editor team was published as \citet{vilhuber_teaching_2022}.
+
+\subsection{Resources}
+
+The AEA Data Editor maintains public resources available to the economics community. These are made available through a dedicated website at \href{https://aeadataeditor.github.io/}{aeadataeditor.github.io/} and code and project templates provided at \href{https://github.com/aeadataeditor}{github.com/aeadataeditor}. In particular:
+
+\begin{itemize}
+    \item Step-by-step guidance on how to prepare a replication package is provided at \href{https://aeadataeditor.github.io/aea-de-guidance/}{aeadataeditor.github.io/aea-de-guidance/}, including video tutorials and a description of the process. 
+    \item The template README \citep{READMEv1.1.0} is referenced as part of the guidance, and separately accessible at \href{https://social-science-data-editors.github.io/template_README/}{social-science-data-editors.github.io/template\_README/}.
+    \item Various blog posts on topics relating to computational reproducibility are posted at \href{https://aeadataeditor.github.io/year-archive/}{aeadataeditor.github.io/year-archive/} and typically summarized on Twitter under the Data Editor's handle \href{https://twitter.com/AEAData}{@AEAData}, and more recently on Mastodon under \href{https://mstdn.social/@aeadata}{@aeadata@mstdn.social}
+    \item Instructions to replicators for assessing authors' replication packages are provided at \href{https://github.com/AEADataEditor/replication-template}{github.com/AEADataEditor/replication-template}.
+    \item Template code for using containers for Stata, R, Julia, and Gurobi can be found by \href{https://github.com/AEADataEditor?q=docker&type=all&language=&sort=}{searching for ``docker`` on the Github site}.
+    
+\end{itemize}

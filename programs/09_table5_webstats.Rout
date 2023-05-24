@@ -1,0 +1,365 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Tabulate statistics and make graphs for the AEA data editor report
+> # Harry Son
+> # 12/11/2020
+> 
+> # Inputs
+> #   - file.path(jiraanon,"jira.anon.RDS") 
+> # Outputs
+> 
+> 
+> ### Load libraries 
+> ### Requirements: have library *here*
+> source(here::here("global-libraries.R"),echo=TRUE)
+
+> options(repos = c(REPO_NAME = "https://packagemanager.rstudio.com/all/__linux__/focal/2021-12-01+MTo2NjQ1NDU1LDI6NDUyNjIxNTtCRjhCNTA0Mw"))
+
+> pkgTest <- function(x) {
++     if (!require(x, character.only = TRUE)) {
++         install.packages(x, dep = TRUE)
++         if (!require(x, charact .... [TRUNCATED] 
+
+> pkgTest.github <- function(libname, source, pkgname = libname) {
++     if (!require(libname, character.only = TRUE)) {
++         if (pkgname == "")  .... [TRUNCATED] 
+
+> global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
++     "stringr", "readr", "splitstackshape", "digest", "remotes", 
++     "readxl", "write ..." ... [TRUNCATED] 
+
+> results <- sapply(as.list(global.libraries), pkgTest)
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: here
+here() starts at /home/rstudio
+Loading required package: tidyr
+Loading required package: tibble
+Loading required package: stringr
+Loading required package: readr
+Loading required package: splitstackshape
+Loading required package: digest
+Loading required package: remotes
+Loading required package: readxl
+Loading required package: writexl
+Loading required package: ggplot2
+Loading required package: ggthemes
+Loading required package: janitor
+
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+Loading required package: dataverse
+
+> pkgTest.github("data.table", "Rdatatable")
+Loading required package: data.table
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+[1] "OK"
+
+> pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
+Loading required package: stargazer
+
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer 
+
+[1] "OK"
+> source(here::here("programs","config.R"),echo=TRUE)
+
+> process_anon <- TRUE
+
+> download_anon <- TRUE
+
+> firstday <- "2021-12-01"
+
+> lastday <- "2022-11-30"
+
+> basepath <- here::here()
+
+> setwd(basepath)
+
+> jira.anon.partial <- file.path("data", "jira", "anon")
+
+> jiraanon <- file.path(basepath, jira.anon.partial)
+
+> manual <- file.path(basepath, "data", "manual")
+
+> jira.raw <- file.path("data", "jira", "raw")
+
+> icpsrbase <- file.path(basepath, "data", "icpsr")
+
+> icpsr.utilization.date <- "2022-12-07"
+
+> icpsr.utilization.file <- paste0("utilizationReport-", 
++     icpsr.utilization.date, ".csv")
+
+> zenodobase <- file.path(basepath, "data", "zenodo")
+
+> jira.anon.name <- file.path(jiraanon, "jira.anon.RDS")
+
+> jira.anon.commit <- "01b56117b4eaa65671f2b60d804cf6b176e1a6ce"
+
+> jira.anon.sha256 <- "08b93c4a60d4bf02a4394f37da2ae16880ab89482278f98e74e0f9552c459a8e"
+
+> jira.anon.sha512 <- "c8d828bc34bb965a57aab0e4446e0b06b7e55329f0600a4bb8e6d2d75908f4c14340a9f7ea6fe4e6eae103ffdb1d019aab313956be52c6971bf3c89633ecc31 ..." ... [TRUNCATED] 
+
+> jira.anon.urlbase <- paste0("https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/", 
++     jira.anon.commit)
+
+> jira.anon.url <- file.path(jira.anon.urlbase, "data", 
++     "anon", "jira.anon.RDS")
+
+> jira.members.url <- file.path(jira.anon.urlbase, "data", 
++     "replicationlab_members.txt")
+
+> jira.members.name <- file.path(jiraanon, "replicationlab_members.txt")
+
+> noncompliance.name <- file.path(jira.raw, "non-compliant-raw.xlsx")
+
+> jira.updates.name <- file.path(jira.raw, "updates-raw.xlsx")
+
+> scholarone <- file.path(basepath, "data", "scholarone")
+
+> scholarone.file <- "dataEditorReport_20211118-20221117.xlsx"
+
+> scholarone.name <- file.path(scholarone, scholarone.file)
+
+> scholarone.prev <- "dataEditorReport_20201128-20211127Revised.xlsx"
+
+> scholarone.skip <- 31
+
+> scholarone.skip2 <- 44
+
+> scholarone.pskip <- 33
+
+> images <- file.path(basepath, "images")
+
+> tables <- file.path(basepath, "tables")
+
+> programs <- file.path(basepath, "programs")
+
+> temp <- file.path(basepath, "data", "temp")
+
+> latexnums.Rda <- file.path(tables, "latexnums.Rda")
+
+> latexnums.tex <- file.path(tables, "latexnums.tex")
+
+> for (dir in list(images, tables, programs, temp)) {
++     if (file.exists(dir)) {
++     }
++     else {
++         dir.create(file.path(dir))
++     }
+ .... [TRUNCATED] 
+
+> set.seed(20201201)
+
+> pkgTest("tibble")
+[1] "OK"
+
+> if (file.exists(latexnums.Rda)) {
++     print(paste0("File for export to LaTeX found: ", latexnums.Rda))
++ } else {
++     latexnums <- tibble(field  .... [TRUNCATED] 
+[1] "File for export to LaTeX found: /home/rstudio/tables/latexnums.Rda"
+
+> update_latexnums <- function(field, value) {
++     latexnums <- readRDS(latexnums.Rda)
++     if (any(latexnums$field == field)) {
++         message( .... [TRUNCATED] 
+
+> .Last <- function() {
++     sessionInfo()
++ }
+> library(stargazer)
+> 
+> # read back in
+> 
+> utilizationReport <- readRDS(file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
+> 
+> icpsr.stats.mb <- readRDS(file=file.path(temp,"icpsr.stats.mb.Rds"))
+> icpsr.stats.gb <- readRDS(file=file.path(temp,"icpsr.stats.gb.Rds"))
+> 
+> webstats <- utilizationReport %>%
++   summarize(totalDownloads = sum(Downloads),
++             totalViews     = sum(Views),
++             totalPublished = sum(is_published),
++             maxDownloads   = max(Downloads),
++             medianDownloads= median(Downloads))
+> 
+> update_latexnums("icpsrutilization",icpsr.utilization.date)
+Adding new row for field icpsrutilization
+> update_latexnums("icpsrtotalDownloads",webstats$totalDownloads)
+Adding new row for field icpsrtotalDownloads
+> update_latexnums("icpsrtotalDownloadsHT",round(webstats$totalDownloads/100000,0))
+Adding new row for field icpsrtotalDownloadsHT
+> update_latexnums("icpsrmaxDownloads",webstats$maxDownloads)
+Adding new row for field icpsrmaxDownloads
+> update_latexnums("icpsrmedianDownloads",webstats$medianDownloads)
+Adding new row for field icpsrmedianDownloads
+> update_latexnums("icpsrtotalViews",webstats$totalViews)
+Adding new row for field icpsrtotalViews
+> update_latexnums("icpsrtotalViewsM",round(webstats$totalViews/1000000,1))
+Adding new row for field icpsrtotalViewsM
+> update_latexnums("icpsrtotalPublished",webstats$totalPublished)
+Adding new row for field icpsrtotalPublished
+> 
+> 
+> 
+> # output table
+> 
+> webstats %>% 
++   bind_cols(icpsr.stats.gb) %>%
++   mutate(Repository = "ICPSR",
++          Published   = prettyNum(totalPublished,big.mark = ","),
++          `Downloads` = prettyNum(totalDownloads,big.mark = ","),
++          `Views`     = prettyNum(totalViews,big.mark = ","),
++          Uploads     = prettyNum(n,big.mark = ","),
++          `Files`     = prettyNum(files,big.mark = ","),
++          `Size (GB)` = prettyNum(sum,big.mark = ",")) %>%
++   select(Repository,Published,Downloads,Views,Uploads,Files,`Size (GB)`)->
++   icpsr.stats.table
+> 
+> 
+> # Do the same for Zenodo, though we only output latexnums
+> # The data were generated by hand (this year), running
+> # python3 zenodo_pull.py
+> # Requirements: requests
+> # dbl  (8): id, revision, downloads, views, unique_downloads, unique_views, volume, version_volume
+> #
+> # dbl (2): sumsize, filecount
+> # The number of uploads was hand-counted: 4
+> 
+> 
+> utilizationReport.z <- read_csv(file.path(zenodobase,"zenodo_data_2022.csv"))
+Rows: 9 Columns: 11
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (2): doi, title
+dbl  (8): id, revision, downloads, views, unique_downloads, unique_views, vo...
+dttm (1): created
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+> sumstats.z          <- read_csv(file.path(zenodobase,"zenodo_data_2022_summary.csv")) %>%
++   rename(files = filecount, sum=sumsize) %>%
++   mutate(sum = sum/1024/1024/1024)
+Rows: 1 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (2): sumsize, filecount
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+> 
+> webstats <- utilizationReport.z %>%
++   summarize(totalDownloads = sum(unique_downloads),
++             totalViews     = sum(unique_views),
++             totalPublished = n(),
++             maxDownloads   = max(unique_downloads),
++             medianDownloads= median(unique_downloads),
++             volume         = sum(volume/1024/1024/1024),
++             uploads        = 4) %>%
++   bind_cols(sumstats.z)
+> 
+> update_latexnums("zenodototalDownloads",webstats$totalDownloads)
+Adding new row for field zenodototalDownloads
+> update_latexnums("zenodototalDownloadsHT",round(webstats$totalDownloads/100000,0))
+Adding new row for field zenodototalDownloadsHT
+> update_latexnums("zenodomaxDownloads",webstats$maxDownloads)
+Adding new row for field zenodomaxDownloads
+> update_latexnums("zenodomedianDownloads",webstats$medianDownloads)
+Adding new row for field zenodomedianDownloads
+> update_latexnums("zenodototalViews",webstats$totalViews)
+Adding new row for field zenodototalViews
+> update_latexnums("zenodototalViewsM",round(webstats$totalViews/1000000,1))
+Adding new row for field zenodototalViewsM
+> update_latexnums("zenodototalPublished",webstats$totalPublished)
+Adding new row for field zenodototalPublished
+> update_latexnums("zenodototalVolumeGB",round(webstats$volume,0))
+Adding new row for field zenodototalVolumeGB
+> update_latexnums("zenodototalVolumeTB",round(webstats$volume/1024,1))
+Adding new row for field zenodototalVolumeTB
+> update_latexnums("zenodototalSizeGB",round(webstats$sum,0))
+Adding new row for field zenodototalSizeGB
+> update_latexnums("zenodototalSizeTB",round(webstats$sum/1024,1))
+Adding new row for field zenodototalSizeTB
+> update_latexnums("zenodototalFiles",webstats$files)
+Adding new row for field zenodototalFiles
+> 
+> webstats %>% 
++   mutate(Repository = "Zenodo",
++           Published   = prettyNum(totalPublished,big.mark = ","),
++          `Downloads` = prettyNum(totalDownloads,big.mark = ","),
++          `Views`     = prettyNum(totalViews,big.mark = ","),
++          Uploads     = prettyNum(uploads,big.mark = ","),
++          `Files`     = prettyNum(files,big.mark = ","),
++          `Size (GB)` = prettyNum(round(sum,2),big.mark = ",")) %>%
++   select(Repository,Published,Downloads,Views,Uploads,Files,`Size (GB)`)->
++   zenodo.stats.table
+> 
+> # combine
+> 
+> stats.table <- bind_rows(icpsr.stats.table, zenodo.stats.table)
+> 
+> stargazer(stats.table,style = "aer",
++           summary = FALSE,
++           out = file.path(tables,"n_webstats.tex"),
++           out.header = FALSE,
++           float = FALSE,
++           rownames = FALSE,
++           digit.separator = ",",
++           digit.separate = 3
++ )
+
+% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Thu, Mar 02, 2023 - 03:42:01 AM
+\begin{tabular}{@{\extracolsep{5pt}} ccccccc} 
+\toprule 
+Repository & Published & Downloads & Views & Uploads & Files & Size (GB) \\ 
+\midrule ICPSR & 4,171 & 297,660 & 2,527,869 & 427 & 51,394 & 951.48 \\ 
+Zenodo & 9 & 284 & 633 & 4 & 6,163 & 372.6 \\ 
+\bottomrule 
+\end{tabular} 
+> #
+> 
+> proc.time()
+   user  system elapsed 
+  1.529   1.434   1.402 
